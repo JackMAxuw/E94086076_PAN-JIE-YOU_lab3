@@ -19,9 +19,6 @@ RED = (255, 0, 0)
 # initialization
 pygame.init()
 
-# create window surface
-win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-
 # load image (background, enemy, buttons)
 background_image = pygame.transform.scale(pygame.image.load("images/Map.png"), (WIN_WIDTH, WIN_HEIGHT))
 enemy_image = pygame.transform.scale(pygame.image.load("images/enemy.png"), (ENM_WIDTH, ENM_HEIGHT))
@@ -37,16 +34,17 @@ continue_image = pygame.transform.scale(pygame.image.load("images/continue.png")
 pygame.display.set_caption("My first game")
 # ... (to be done)
 
+# set start time
+START_TIME = time.time()
 
 class Game:
     def __init__(self):
-        # window
+        # create window surface
         self.win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         # ...(to be done)
 
-        # set font and time
+        # set time font
         self.font = pygame.font.SysFont("simhei", 24)
-        self.text = time.time()
 
         # hp
         self.hp = 7
@@ -70,6 +68,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     run = False
             # ... (to be done)
+
+            self.game_time = int(time.time() - START_TIME)
 
             # draw background
             self.win.blit(background_image, (0, 0))
@@ -99,8 +99,13 @@ class Game:
             # (... to be done)
 
             # draw time
-            text_surface = self.font.render(self.text, True, (0, 0, 255), (255, 255, 255))
-            self.win.blit(text_surface, (0, 550))
+            pygame.draw.rect(background_image, BLACK, [0, 570, 60, 30])
+            minute = self.game_time // 60
+            second = str(self.game_time % 60).zfill(2)
+            time_text = self.font.render(f"{minute}:{second}", True, WHITE, BLACK)
+            time_rect = time_text.get_rect()
+            time_rect.center = (30, WIN_HEIGHT - 15)
+            self.win.blit(time_text, time_rect)
             # ...(to be done)
 
             pygame.display.update()
@@ -109,7 +114,7 @@ if __name__ == "__main__":
     covid_game = Game()
     covid_game.game_run()
 
-# uninitialize all the pygame module
+# stop initialize all the pygame module
 pygame.quit()
 
 
